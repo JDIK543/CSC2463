@@ -1,10 +1,18 @@
 function setup() {
-    createCanvas(800, 400);
+    createCanvas(600, 600);
   }
   
   function draw() {
-    background(78, 222, 87);
-    strokeWeight(2);
-    circle(200,200,350);
-    rect(450,40,325,320);
+    background(255, 255, 255);
+    
+    fill(255, 0, 0, 100);
+    noStroke();
+    circle(300, 200, 300);
+
+    fill(0, 0, 255, 100);
+    circle(200, 400, 300);
+
+    fill(0, 255, 0, 100);
+    circle(400, 400, 300);
+
   }

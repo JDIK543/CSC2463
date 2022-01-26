@@ -6,5 +6,5 @@ function setup() {
     background(78, 222, 87);
     strokeWeight(2);
     circle(200,200,350);
-    rect(450,40,325,320);
+    square(450,40,325);
   }
