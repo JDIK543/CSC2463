@@ -16,7 +16,7 @@ function setup() {
     vertex(440, 250);
     vertex(375, 320);
     vertex(400, 415);
-    vertex(300, 350); //half
+    vertex(300, 350); 
     vertex(200, 415);
     vertex(225, 320);
     vertex(160, 250);
