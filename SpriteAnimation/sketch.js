@@ -15,7 +15,7 @@ function setup() {
   imageMode(CENTER);
   for(i = 0; i < count; i++){
     character[i] = new Character(random([spriteSheet, spriteSheet2, spriteSheet3]), random(100, 500), 
-    random(100, 500), random(1, 5), random([-1, 1]));
+    random(100, 500), random(1, 5));
   }
 
 }
@@ -28,7 +28,7 @@ function keyPressed(){
   }
   else if (keyCode == LEFT_ARROW) {
     for(i = 0; i < count; i++){
-      character[i].go(1);
+      character[i].go(-1);
     }
   }
 }
@@ -47,7 +47,7 @@ function draw(){
 }
 
 class Character {
-  constructor(spriteSheet, x, y, speed, move) {
+  constructor(spriteSheet, x, y, speed) {
     this.spriteSheet = spriteSheet;
     this.sx = 0;
     this.x = x;
@@ -55,7 +55,7 @@ class Character {
     this.move = 0;
     this.facing = 1;
     this.speed = speed;
-    this.move = move;
+    
   }
 
   draw() {
