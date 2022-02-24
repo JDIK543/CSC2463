@@ -1,4 +1,5 @@
 
+
 let sounds = new Tone.Players({
   'bird': 'media/birdchirp.mp3',
   'cat': 'media/catmeowing.mp3',
@@ -7,12 +8,23 @@ let sounds = new Tone.Players({
 })
 
 let button1, button2, button3, button4;
-let slider;
+let nxSlider;
 
+var delay = new Tone.FeedbackDelay("8n", 0.5);
+var gain = new Tone.Gain().toDestination();
+
+sounds.connect(delay);
+delay.connect(gain);
+sounds.connect(gain);
+
+function preload() {
+  nxSlider = new Nexus.Slider('#slider');
+}
 
 function setup() {
   createCanvas(800, 400);
   sounds.toDestination();
+  delay.delayTime.value = 0;
 
   button1 = createButton('bird');
   button1.position(50, 100);
@@ -29,6 +41,11 @@ function setup() {
   button4 = createButton('dragon');
   button4.position(650, 100);
   button4.mousePressed(  ()=>playSound('dragon')   );
+
+  nxSlider.on('change', function (v){
+    delay.delayTime.value = v;
+  })
+
 }
 
 function draw() {
