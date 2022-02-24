@@ -1,44 +1,54 @@
-// Jesse Allison 2022
 
-let sound1 = new Tone.Player('media/FamilyFeud-Buzzer3.mp3')
 let sounds = new Tone.Players({
-  'shot': 'media/02-shot.mp3',
-  'through': 'media/03-through.mp3',
-  'theHeart': 'media/04-theHeart.mp3'
+  'bird': 'media/birdchirp.mp3',
+  'cat': 'media/catmeowing.mp3',
+  'dog': 'media/dogbark.mp3',
+  'dragon': 'media/dragonroar.mp3'
 })
 
-let button;
+let button1, button2, button3, button4;
+let slider;
 
 
 function setup() {
-  createCanvas(400, 400);
-  sound1.toDestination();
+  createCanvas(800, 400);
   sounds.toDestination();
 
-  button = createButton('through');
-  button.position(200, 400);
-  button.mousePressed(  ()=>playSound('theHeart')   );
+  button1 = createButton('bird');
+  button1.position(50, 100);
+  button1.mousePressed(  ()=>playSound('bird')   );
+
+  button2 = createButton('cat');
+  button2.position(250, 100);
+  button2.mousePressed(  ()=>playSound('cat')   );
+
+  button3 = createButton('dog');
+  button3.position(450, 100);
+  button3.mousePressed(  ()=>playSound('dog')   );
+
+  button4 = createButton('dragon');
+  button4.position(650, 100);
+  button4.mousePressed(  ()=>playSound('dragon')   );
 }
 
 function draw() {
   background(220);
+  textSize(25);
+  text("Click the buttons below to play an animal noise", 100, 50);
 }
 
-function keyPressed() {
-  console.log("key is: ", key);
-  if(key === "1"){
-    sounds.player('shot').start();
-    // sound1.start();
-  } 
-  
-  // sound1.playbackRate = (mouseY /200)+0.01;
-  // sound1.start();
-}
 
 function playSound(whichSound) {
-  if (whichSound === 'through'){
-    sounds.player('through').start();
-  } else if (whichSound === 'theHeart') {
-    sounds.player('theHeart').start();
+  if (whichSound === 'bird'){
+    sounds.player('bird').start();
+  } 
+  else if (whichSound === 'cat') {
+    sounds.player('cat').start();
+  }
+  else if (whichSound === 'dog') {
+    sounds.player('dog').start();
+  }
+  else if (whichSound === 'dragon') {
+    sounds.player('dragon').start();
   }
 }
