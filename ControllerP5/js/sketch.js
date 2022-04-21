@@ -1,3 +1,11 @@
+/*Jacob Dickson
+  CSC 2463
+  4/20/2022
+  
+  Link to video: https://youtu.be/br3Eyhn0WVo
+
+*/
+
 let spriteSheet;
 let bugs = [];
 let count = 30;
@@ -52,13 +60,7 @@ function timer(){
   return int((millis() - startTime) / 1000);
 }
 
-// function mousePressed(){
-//   for(i = 0; i < count; i++){
-//     bugs[i].squish(mouseX, mouseY);
-    
-//   }
-  
-// }
+
 
 function draw(){
   background(255, 255, 255);
@@ -74,7 +76,7 @@ function draw(){
   }
   //playing the game
   else if(gameState == 1){
-    //drawCircle(sensors.sensorXTransmit, sensors.sensorYTransmit);
+    
     for(i = 0; i < count; i++){
       bugs[i].draw();
     }
