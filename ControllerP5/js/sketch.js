@@ -2,6 +2,9 @@ let spriteSheet;
 let bugs = [];
 let count = 30;
 let gameState = 0;
+let serialPDM;
+let portName = 'COM7';
+let sensors;
 var score = 0;
 var speed = 1.0;
 
@@ -36,7 +39,11 @@ function preload() {
 }
 
 function setup() {
-  createCanvas(1200, 600);
+  
+  serialPDM = new PDMSerial(portName);
+  console.log(serialPDM.inData);
+  sensors = serialPDM.sensorData;
+  createCanvas(1000, 1000);
   seq.start();
   imageMode(CENTER);
 }
@@ -45,27 +52,29 @@ function timer(){
   return int((millis() - startTime) / 1000);
 }
 
-function mousePressed(){
-  for(i = 0; i < count; i++){
-    bugs[i].squish(mouseX, mouseY);
+// function mousePressed(){
+//   for(i = 0; i < count; i++){
+//     bugs[i].squish(mouseX, mouseY);
     
-  }
+//   }
   
-}
+// }
 
 function draw(){
   background(255, 255, 255);
   //startScreen
   if(gameState == 0){
+    serialPDM.transmit('led', 0);
     textSize(30);
-    text('Press mouse button to start', 150, 300);
-    if(mouseIsPressed){
+    text('Press button to start', 150, 300);
+    if(sensors.button){
       startTime = millis();
       gameState = 1;
     }
   }
   //playing the game
   else if(gameState == 1){
+    //drawCircle(sensors.sensorXTransmit, sensors.sensorYTransmit);
     for(i = 0; i < count; i++){
       bugs[i].draw();
     }
@@ -73,6 +82,18 @@ function draw(){
     let totalTime = 30;
     text("Time: " + (totalTime - time), 10, 30);
     text("Score: " + score, 10, 60);
+
+    if(sensors.button){
+      
+      for(i = 0; i < count; i++){
+        bugs[i].squish(sensors.sensorXTransmit, sensors.sensorYTransmit);
+        
+      }
+      
+    }
+
+    drawCircle(sensors.sensorXTransmit, sensors.sensorYTransmit);
+
     if(score == count){
       congrats.start(0);
       gameState = 2;
@@ -98,9 +119,14 @@ function draw(){
     text("Game Over, you did not squish all the bugs in time", 150, 300);
     text("Score: " + score + " / " + count, 150, 400);
     text("Reload page to restart", 150, 500);
-    
+    serialPDM.transmit('led', 1);
     
   }
+}
+
+function drawCircle(x,y){
+  fill("red");
+  ellipse(x, y, 10);
 }
 
 class Bug {
