@@ -2,223 +2,209 @@
   CSC 2463
   4/20/2022
   
-  Link to video: https://youtu.be/br3Eyhn0WVo
+  Link to video: 
 
 */
 
-let spriteSheet;
-let bugs = [];
-let count = 30;
+let bombImage;
+let sub;
+let score;
+let bombs = [];
+let bombNumber = 3;
+let maxBombs = 60;
+//CHANGE BACK TO 0!!!!!!!!!!!!!!!!
 let gameState = 0;
-let serialPDM;
-let portName = 'COM7';
-let sensors;
-var score = 0;
-var speed = 1.0;
+let tempCounter = 0;
+let bombAdded = false;
+let prevScore = 0;
+let bombTimer = 0;
+let subX = 790;
+let subY = 375;
 
-let seqSynth = new Tone.FMSynth().toDestination();
-var seq = new Tone.Sequence(callback, 
-  //["Db3", "Eb3", "Fb3", "Gb3", "G3", "A3", "B3", "Db4"], "8n");
+class Bomb{
+  constructor(x, speed){
+    this.x = x;
+    this.speed = speed;
+    this.y = 15;
+    this.falling = 0;
 
-    //took the above Db arabic scale and changed the ending notes to make it loop beter
-    ["Db3", "Eb3", "Fb3", "Gb3", "G3", "Gb3", "G3", "Eb3"], "8n");
-
-function callback(time, pitch){
-  seqSynth.triggerAttackRelease(pitch, "8n", time);
-  seqSynth.volume.value = -10;
-}
-
-Tone.Transport.start()
-Tone.Transport.bpm.value = 100;
-Tone.Transport.loop = true; 
-Tone.Transport.loopStart = 0;
-Tone.Transport.loopEnd = '30:0:0';
-
-var congrats = new Tone.Player("sounds/congrats.mp3").toDestination();
-var squish = new Tone.Player("sounds/squish.mp3").toDestination();
-var lose = new Tone.Player("sounds/lose.mp3").toDestination();
-
-function preload() {
-  Tone.start();
-  spriteSheet = loadImage("images/bug.png");
-  for(i = 0; i < count; i++){
-    bugs[i] = new Bug(spriteSheet, random(1200), random(600), random([-2, -1, 1, 2]), 1);
   }
+
+  draw(){
+    push();
+    //translate(this.x, this.y);
+
+    // if(this.falling == 0){
+    //   circle(this.x, this.y, 5);
+    //   this.falling = 1;
+    // }
+    fill(0);
+    circle(this.x, this.y, 5)
+    this.y += this.speed;
+    if(this.y >= 735){
+      this.y = 15;
+      this.x = random(405, 1175);
+    }
+    pop();
+    //console.log('y: '+this.y + 'x: '+ this.x);
+  }
+  
 }
 
-function setup() {
+class Sub{
+  constructor(){
+    this.x = 790;
+    this.y = 375;
+    this.direction = 1;
+    this.xMove = 0;
+    this.yMove = 0;
+    this.isDead = false;
+    this.isOnScreen = false;
+  }
+
+  draw(){
+    push()
+    fill(100);
+    ellipse(this.x, this.y, 20, 10);
+
+
+
+    pop();
+  }
+
+  go(direction){
+    this.xMove = direction
+  }
   
-  serialPDM = new PDMSerial(portName);
-  console.log(serialPDM.inData);
-  sensors = serialPDM.sensorData;
-  createCanvas(1000, 1000);
-  seq.start();
-  imageMode(CENTER);
+  move(x,y){
+    this.x += x;
+    this.y += y;
+  }
+
 }
+function movement() {
+  if(keyIsDown(LEFT_ARROW))
+    sub.xMove = -2;
+  if(keyIsDown(RIGHT_ARROW))
+    sub.xMove = 2;
+
+  if(keyIsDown(DOWN_ARROW))
+    sub.yMove = 1;
+  if(keyIsDown(UP_ARROW))
+    sub.yMove = -1;
+
+  sub.move(sub.xMove, sub.yMove);
+}
+function keyReleased() {
+  if(!keyIsDown(LEFT_ARROW) || !keyIsDown(RIGHT_ARROW))
+    sub.xMove = 0;
+  if(!keyIsDown(UP_ARROW) || !keyIsDown(DOWN_ARROW))
+    sub.yMove = 0;
+
+    sub.move(sub.xMove, sub.yMove);
+}
+
 
 function timer(){
   return int((millis() - startTime) / 1000);
 }
 
 
+function setup(){
+  createCanvas(1400,750);
+  for(i = 0; i < bombNumber; i++){
+    bombs[i] = new Bomb(random(405,1175), random(1,3));
+  }
+  sub = new Sub;
+}
 
 function draw(){
-  background(255, 255, 255);
-  //startScreen
+
   if(gameState == 0){
-    serialPDM.transmit('led', 0);
+    background(255);
     textSize(30);
-    text('Press button to start', 150, 300);
-    if(sensors.button){
+    fill(0);
+    text('You are the last submarine of your fleet, Commander. If\nyour submarine is sunk, the data and technology the enemy\nmay gain from the wreckage could very well cost us the war.\n\n\t\t\tHelp is en route Commander, ETA 90 seconds.', 300, 100);
+    fill(color(200,0,0));
+    textSize(40);
+    text('Press  the mouse button to begin', 380, 370);
+    if(mouseIsPressed){
       startTime = millis();
       gameState = 1;
     }
   }
-  //playing the game
   else if(gameState == 1){
     
-    for(i = 0; i < count; i++){
-      bugs[i].draw();
-    }
-    let time = timer();
-    let totalTime = 30;
-    text("Time: " + (totalTime - time), 10, 30);
-    text("Score: " + score, 10, 60);
+    background(209);
+    fill(color(0, 0, 100, 150));
+    rect(400, 10, 780, 730);
+    textSize(30);
+    fill(0);
+    text('Objective: Survive', 10, 35);
 
-    if(sensors.button){
+    
+    //text('\tYou are the last submarine of your fleet, Commander. If\nyour submarine is sunk, the data and technology the enemy\nmay gain from the wreckage could very well cost us the war.\nHelp is en route Commander, ETA 90 seconds.', 10, 60);
+
+    textSize(30);
+    text('Controls:', 10, 150);
+
+    textSize(15);
+    text('Left Button: move left\n\nRight Button: move right\n\nTurn Knob Left: dive\n\nTurn Knob Right: surface', 10, 170);
+
+    let time = timer();
+    let score = timer();
+    bombTimer = timer() % 3;
+    let totalTime = 90;
+
+    textSize(30);
+    text('ETA: ' + (totalTime - time) + ' seconds\n Score: '+ score, 10, 70);
+
+    fill(0);
+    for(i = 0; i < bombNumber; i++){
+      bombs[i].draw();
       
-      for(i = 0; i < count; i++){
-        bugs[i].squish(sensors.sensorXTransmit, sensors.sensorYTransmit);
+    }
+    movement();
+    sub.draw();
+
+  
+    if(bombTimer != 2){
+      bombAdded = false;
+    }
+    else if(bombTimer == 2 && !bombAdded){
+      bombAdded = true;
+      bombNumber++;
+      bombs[bombNumber - 1] = new Bomb(random(405,1175), random(1,3));
+    }
+
+    for(i = 0; i<bombNumber; i++){
+      let bombCheck = bombs[i];
+      let bombLeft = bombCheck.x - 2.5;
+      let bombRight = bombCheck.x + 2.5;
+      let bombTop = bombCheck.y - 2.5;
+      let bombBottom = bombCheck.y + 2.5;
+
+      let subLeft = sub.x - 10;
+      let subRight = sub.x + 10;
+      let subTop = sub.y - 5;
+      let subBottom = sub.y + 5;
+
+      if((bombLeft >= subLeft <= bombRight)&&(bombRight <= subRight >= bombLeft)){
         
       }
+
       
     }
 
-    drawCircle(sensors.sensorXTransmit, sensors.sensorYTransmit);
-
-    if(score == count){
-      congrats.start(0);
+    if((totalTime - time) == 0){
       gameState = 2;
     }
-    else if(time >= totalTime){
-      lose.start(0);
-      gameState = 3;
-    }
   }
-  //win screen
   else if(gameState == 2){
-    Tone.Transport.bpm.value = 100;
-    
-    text("Congrats, you squished all the bugs in time!", 150, 300);
-    text("Score: " + score + " / " + count, 150, 400);
-    text("Reload page to restart", 150, 500);
-    
-    
-  }
-  //game over screen
-  else if(gameState == 3){
-    Tone.Transport.bpm.value = 100;
-    text("Game Over, you did not squish all the bugs in time", 150, 300);
-    text("Score: " + score + " / " + count, 150, 400);
-    text("Reload page to restart", 150, 500);
-    serialPDM.transmit('led', 1);
-    
+    background(255);
+    fill(color(200,0,0));
+    textSize(40);
+    text('Game Over', 380, 370);
   }
 }
 
-function drawCircle(x,y){
-  fill("red");
-  ellipse(x, y, 10);
-}
-
-class Bug {
-  constructor(spriteSheet, x, y, moving, alive) {
-    this.spriteSheet = spriteSheet;
-    this.frame = 0;
-    this.x = x;
-    this.y = y;
-    this.move = moving;
-    this.facing = moving;
-    this.alive = alive; 
-  }
-
-  draw() {
-    push();
-    translate(this.x, this.y);
-    if (this.facing == 2){
-      scale(1.0, -1.0);
-    }
-    if (this.facing == -1){
-      rotate(-PI/2);
-    }
-    if (this.facing == 1){
-      rotate(PI/2);   
-    }
-
-    if (this.move == 0) {
-      image(this.spriteSheet, 0,0,80,80,240,0,80,80);
-    }
-    else {
-      if (this.frame == 0){
-        image(this.spriteSheet, 0,0, 80,80, 80,0,80,80);
-      }
-      if (this.frame == 1){
-        image(this.spriteSheet, 0,0, 80,80, 0,0,80,80);
-      }
-      if (this.frame == 2){
-        image(this.spriteSheet, 0,0, 80,80, 160,0,80,80);
-      }
-      if(frameCount % 4 == 0){
-        this.frame = (this.frame+1)%3; 
-        if (this.move == -1 || this.move == 1){
-          this.x = this.x + speed * (this.move * 3); 
-        }
-        if (this.move == -2 || this.move == 2){
-          this.y = this.y + speed * (this.move * 3);
-        }
-        
-        if(this.x < 30){
-          this.move = 1;
-          this.facing = 1;
-        }
-        if(this.x > width-30){
-          this.move = -1;
-          this.facing = -1;
-        }
-        if(this.y < 30){
-          this.move = 2;
-          this.facing = 2;
-        }
-        if (this.y > height-30){
-          this.move = -2;
-          this.facing = -2;
-        }
-      }
-    }
-    pop();
-  }
-
-  go(direction){
-    this.move = direction;
-    this.facing = direction;
-    this.sx = 3;
-  }
-
-  stop() {
-    this.move = 0;
-  }
-
-  squish(x, y){
-    if(this.x-30<x && x < this.x+30 && this.y-30<y && y<this.y+30){
-      this.move = 0;  
-      if (this.alive == 1){
-        squish.start(0);
-        Tone.Transport.bpm.value += 5;
-        speed = speed + .2;
-        score = score + 1;
-        this.alive = 0;
-      }
-    }
-     
-  }  
-}
