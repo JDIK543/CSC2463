@@ -20,10 +20,6 @@ let subX = 790;
 let subY = 375;
 let totalTime = 90;
 
-let serialPDM;
-let portName = 'COM7';
-let sensors;
-
 let seqSynth = new Tone.FMSynth().toDestination();
 var seq = new Tone.Sequence(callback, 
   
@@ -127,16 +123,16 @@ class Sub{
 
 }
 function movement() {
-  if(sensors.left){ //keyIsDown(LEFT_ARROW)
+  if(keyIsDown(LEFT_ARROW)){
     sub.xMove = -1.5;
   }
-  if(sensors.right){ //keyIsDown(RIGHT_ARROW)
+  if(keyIsDown(RIGHT_ARROW)){
     sub.xMove = 1.5;
   }
-  if(sensors.sensorTransmit <= 300){ //keyIsDown(DOWN_ARROW)
+  if(keyIsDown(DOWN_ARROW)){
     sub.yMove = 1;
   }
-  if(sensors.sensorTransmit >= 400){ //keyIsDown(UP_ARROW)
+  if(keyIsDown(UP_ARROW)){
     sub.yMove = -1;
   }
 
@@ -159,10 +155,10 @@ function movement() {
 
   sub.move(sub.xMove, sub.yMove);
 }
-function buttonsAreReleased() {
-  if(!sensors.left && !sensors.right) //!keyIsDown(LEFT_ARROW) || !keyIsDown(RIGHT_ARROW)
+function keyReleased() {
+  if(!keyIsDown(LEFT_ARROW) || !keyIsDown(RIGHT_ARROW))
     sub.xMove = 0;
-  if(!(sensors.sensorTransmit >= 400) || !(sensors.sensorTransmit <= 300)) //!keyIsDown(UP_ARROW) || !keyIsDown(DOWN_ARROW)
+  if(!keyIsDown(UP_ARROW) || !keyIsDown(DOWN_ARROW))
     sub.yMove = 0;
 
     sub.move(sub.xMove, sub.yMove);
@@ -177,11 +173,6 @@ function timer(){
 
 
 function setup(){
-
-  serialPDM = new PDMSerial(portName);
-  console.log(serialPDM.inData);
-  sensors = serialPDM.sensorData;
-
   createCanvas(1400,750);
   seq.start();
   for(i = 0; i < bombNumber; i++){
@@ -251,10 +242,8 @@ function draw(){
     textSize(30);
     text('ETA: ' + (totalTime - score) + ' seconds', 10, 100);
 
-    sub.draw();
     movement();
-    buttonsAreReleased();
-    
+    sub.draw();
 
   
 
@@ -301,7 +290,6 @@ function draw(){
   }
   else if(gameState == 3){
     background(209);
-    serialPDM.transmit('dead', 1);
     Tone.Transport.bpm.value = 60;
     fill(color(0, 0, 100, 150));
     rect(400, 0, 780, 730);
