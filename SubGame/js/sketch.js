@@ -2,7 +2,7 @@
   CSC 2463
   4/20/2022
   
-  Link to video: 
+  Link to video: https://youtu.be/8sZ3zX7G8Og
 
 */
 
@@ -127,16 +127,16 @@ class Sub{
 
 }
 function movement() {
-  if(sensors.left){ //keyIsDown(LEFT_ARROW)
+  if(sensors.left){ 
     sub.xMove = -1.5;
   }
-  if(sensors.right){ //keyIsDown(RIGHT_ARROW)
+  if(sensors.right){ 
     sub.xMove = 1.5;
   }
-  if(sensors.sensorTransmit <= 300){ //keyIsDown(DOWN_ARROW)
+  if(sensors.sensorTransmit <= 300){ 
     sub.yMove = 1;
   }
-  if(sensors.sensorTransmit >= 400){ //keyIsDown(UP_ARROW)
+  if(sensors.sensorTransmit >= 400){ 
     sub.yMove = -1;
   }
 
@@ -160,9 +160,9 @@ function movement() {
   sub.move(sub.xMove, sub.yMove);
 }
 function buttonsAreReleased() {
-  if(!sensors.left && !sensors.right) //!keyIsDown(LEFT_ARROW) || !keyIsDown(RIGHT_ARROW)
+  if(!sensors.left && !sensors.right) 
     sub.xMove = 0;
-  if(!(sensors.sensorTransmit >= 400) || !(sensors.sensorTransmit <= 300)) //!keyIsDown(UP_ARROW) || !keyIsDown(DOWN_ARROW)
+  if(!(sensors.sensorTransmit >= 400) || !(sensors.sensorTransmit <= 300)) 
     sub.yMove = 0;
 
     sub.move(sub.xMove, sub.yMove);
@@ -203,7 +203,6 @@ function draw(){
     text('Press the mouse button to begin', 480, 360);
     if(mouseIsPressed){
       Tone.start();
-      //seq.start();
       startTime = millis();
       gameState = 1;
     }
