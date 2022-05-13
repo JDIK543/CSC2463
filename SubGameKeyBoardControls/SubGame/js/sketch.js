@@ -237,7 +237,7 @@ function draw(){
     text('Controls:', 10, 150);
 
     textSize(15);
-    text('Left Button: move left\n\nRight Button: move right\n\nTurn Knob Left: dive\n\nTurn Knob Right: surface', 10, 170);
+    text('Left Arrow: move left\n\nRight Arrow: move right\n\nUp Arrow: dive\n\nRight Arrow: surface', 10, 170);
 
     textSize(30);
     text('ETA: ' + (totalTime - score) + ' seconds', 10, 100);
@@ -301,7 +301,7 @@ function draw(){
     text('Controls:', 10, 150);
 
     textSize(15);
-    text('Left Button: move left\n\nRight Button: move right\n\nTurn Knob Left: dive\n\nTurn Knob Right: surface', 10, 170);
+    text('Left Arrow: move left\n\nRight Arrow: move right\n\nUp Arrow: dive\n\nRight Arrow: surface', 10, 170);
 
     textSize(30);
     text('ETA: ' + (totalTime - score) + ' seconds', 10, 100);
