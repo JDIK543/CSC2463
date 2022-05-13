@@ -5,8 +5,6 @@ increases and the tempo of the background music increases, starting at 100 bpm. 
 explodes and the game over screen is shown, the music tempo is also set to a value of 60. If The player survives, a
 victory screen is shown and the music is set back to its original tempo.
 
-For a demonstration of the game with its arduino controlls, see the video linked below:
-https://youtu.be/8sZ3zX7G8Og
+For a demonstration of the game with its arduino controlls, click [here](https://youtu.be/8sZ3zX7G8Og).
 
-To play the game for yourself with keyboard controls, visit the following link:
-https://jdik543.github.io/CSC2463/SubGameKeyBoardControls/SubGame/
+To play the game for yourself with keyboard controls, click [here](https://jdik543.github.io/CSC2463/SubGameKeyBoardControls/SubGame/).
